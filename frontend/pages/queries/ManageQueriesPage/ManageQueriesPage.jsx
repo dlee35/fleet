@@ -114,7 +114,7 @@ export class ManageQueriesPage extends Component {
   onSelectQuery = (selectedQuery) => {
     const { dispatch } = this.props;
     const locationObject = {
-      pathname: '/queries/manage',
+      pathname: '/fleet/queries/manage',
       query: { selectedQuery: selectedQuery.id },
     };
 
@@ -126,7 +126,7 @@ export class ManageQueriesPage extends Component {
   onDblClickQuery = (selectedQuery) => {
     const { dispatch } = this.props;
 
-    dispatch(push(`/queries/${selectedQuery.id}`));
+    dispatch(push(`/fleet/queries/${selectedQuery.id}`));
 
     return false;
   }

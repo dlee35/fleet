@@ -39,7 +39,7 @@ export class PackComposerPage extends Component {
   visitPackPage = (packID) => {
     const { dispatch } = this.props;
 
-    dispatch(push(`/packs/${packID}`));
+    dispatch(push(`/fleet/packs/${packID}`));
 
     return false;
   }

@@ -46,7 +46,7 @@ var config  = {
   },
   output: {
     path: path.join(repo, 'assets/'),
-    publicPath: "/assets/",
+    publicPath: "/fleet/assets/",
     filename: '[name].js'
   },
   plugins: plugins,

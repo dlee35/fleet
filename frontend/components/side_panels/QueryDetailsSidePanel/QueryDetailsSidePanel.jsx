@@ -38,7 +38,7 @@ class QueryDetailsSidePanel extends Component {
           return (
             <li className={`${baseClass}__pack-item`} key={`query-side-panel-pack-${pack.id}`}>
               <Icon name="packs" />
-              <Link to={`/packs/${pack.id}`} className={`${baseClass}__pack-name`}>{pack.name}</Link>
+              <Link to={`/fleet/packs/${pack.id}`} className={`${baseClass}__pack-name`}>{pack.name}</Link>
             </li>
           );
         })}

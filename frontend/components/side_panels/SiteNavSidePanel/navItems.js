@@ -4,24 +4,24 @@ export default (admin) => {
       icon: 'admin',
       name: 'Admin',
       location: {
-        regex: /^\/admin/,
-        pathname: '/admin/users',
+        regex: /^\/fleet\/admin/,
+        pathname: '/fleet/admin/users',
       },
       subItems: [
         {
           icon: 'admin',
           name: 'Manage Users',
           location: {
-            regex: /\/admin\/users/,
-            pathname: '/admin/users',
+            regex: /\/fleet\/admin\/users/,
+            pathname: '/fleet/admin/users',
           },
         },
         {
           icon: 'user-settings',
           name: 'App Settings',
           location: {
-            regex: /\/admin\/settings/,
-            pathname: '/admin/settings',
+            regex: /\/fleet\/admin\/settings/,
+            pathname: '/fleet/admin/settings',
           },
         },
       ],
@@ -33,8 +33,8 @@ export default (admin) => {
       icon: 'hosts',
       name: 'Hosts',
       location: {
-        regex: /^\/hosts/,
-        pathname: '/hosts/manage',
+        regex: /^\/fleet\/hosts/,
+        pathname: '/fleet/hosts/manage',
       },
       subItems: [],
     },
@@ -42,24 +42,24 @@ export default (admin) => {
       icon: 'query',
       name: 'Query',
       location: {
-        regex: /^\/queries/,
-        pathname: '/queries/manage',
+        regex: /^\/fleet\/queries/,
+        pathname: '/fleet/queries/manage',
       },
       subItems: [
         {
           icon: 'query',
           name: 'Manage Queries',
           location: {
-            regex: /\/queries\/manage/,
-            pathname: '/queries/manage',
+            regex: /\/fleet\/queries\/manage/,
+            pathname: '/fleet/queries/manage',
           },
         },
         {
           icon: 'pencil',
           name: 'New Query',
           location: {
-            regex: /\/queries\/new/,
-            pathname: '/queries/new',
+            regex: /\/fleet\/queries\/new/,
+            pathname: '/fleet/queries/new',
           },
         },
       ],
@@ -68,24 +68,24 @@ export default (admin) => {
       icon: 'packs',
       name: 'Packs',
       location: {
-        regex: /^\/packs/,
-        pathname: '/packs/manage',
+        regex: /^\/fleet\/packs/,
+        pathname: '/fleet/packs/manage',
       },
       subItems: [
         {
           icon: 'packs',
           name: 'Manage Packs',
           location: {
-            regex: /\/packs\/manage/,
-            pathname: '/packs/manage',
+            regex: /\/fleet\/packs\/manage/,
+            pathname: '/fleet/packs/manage',
           },
         },
         {
           icon: 'pencil',
           name: 'New Pack',
           location: {
-            regex: /\/packs\/new/,
-            pathname: '/packs/new',
+            regex: /\/fleet\/packs\/new/,
+            pathname: '/fleet/packs/new',
           },
         },
       ],
@@ -94,7 +94,7 @@ export default (admin) => {
       icon: 'help',
       name: 'Help',
       location: {
-        regex: /^\/help/,
+        regex: /^\/fleet\/help/,
         pathname: 'https://github.com/kolide/fleet/blob/master/docs/README.md',
       },
       subItems: [],

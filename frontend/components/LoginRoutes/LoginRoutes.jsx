@@ -60,8 +60,8 @@ const mapStateToProps = (state, ownProps) => {
   const { location: { pathname, query } } = ownProps;
   const { token } = query;
 
-  const isForgotPassPage = pathname === '/login/forgot';
-  const isResetPassPage = pathname === '/login/reset';
+  const isForgotPassPage = pathname === '/fleet/login/forgot';
+  const isResetPassPage = pathname === '/fleet/login/reset';
 
   return {
     isForgotPassPage,

@@ -273,7 +273,7 @@ export class QueryPage extends Component {
 
     return dispatch(queryActions.create(formData))
       .then((query) => {
-        dispatch(push(`/queries/${query.id}`));
+        dispatch(push(`/fleet/queries/${query.id}`));
       })
       .catch(() => false);
   })

@@ -30,7 +30,7 @@ export class ResetPasswordPage extends Component {
     const { dispatch, token, user } = this.props;
 
     if (!user && !token) {
-      return dispatch(push('/login'));
+      return dispatch(push('/fleet/login'));
     }
 
     return false;
@@ -60,7 +60,7 @@ export class ResetPasswordPage extends Component {
 
     return dispatch(resetPassword(resetPasswordData))
       .then(() => {
-        return dispatch(push('/login'));
+        return dispatch(push('/fleet/login'));
       })
       .catch(() => false);
   })
@@ -77,7 +77,7 @@ export class ResetPasswordPage extends Component {
     const passwordUpdateParams = { password };
 
     return dispatch(performRequiredPasswordReset(passwordUpdateParams))
-      .then(() => { return dispatch(push('/')); })
+      .then(() => { return dispatch(push('/fleet/')); })
       .catch(() => false);
   }
 

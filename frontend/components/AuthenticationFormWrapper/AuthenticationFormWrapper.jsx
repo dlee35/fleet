@@ -13,7 +13,7 @@ class AuthenticationFormWrapper extends Component {
 
     return (
       <div className={baseClass}>
-        <img alt="Kolide Fleet" src="/assets/images/kolide-logo-vertical.svg" className={`${baseClass}__logo`} />
+        <img alt="Kolide Fleet" src="/fleet/assets/images/kolide-logo-vertical.svg" className={`${baseClass}__logo`} />
         {children}
       </div>
     );

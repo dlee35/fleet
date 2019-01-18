@@ -182,6 +182,7 @@ class AppConfigForm extends Component {
           </div>
           <div className={`${baseClass}__details`}>
             <p>What base URL should <strong>osqueryd</strong> clients use to connect and register with <strong>Kolide</strong>?</p>
+            <p className={`${baseClass}__note`}><strong>Note: Remember the endpoints access the API on TCP port 8080.</strong></p>
             <p className={`${baseClass}__note`}><strong>Note:</strong> Please ensure the URL you choose is accessible to all endpoints that need to communicate with Kolide, otherwise they will not be able to correctly register.</p>
           </div>
         </div>

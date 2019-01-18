@@ -137,7 +137,7 @@ export class AllPacksPage extends Component {
   onSelectPack = (selectedPack) => {
     const { dispatch } = this.props;
     const locationObject = {
-      pathname: '/packs/manage',
+      pathname: '/fleet/packs/manage',
       query: { selectedPack: selectedPack.id },
     };
 
@@ -149,7 +149,7 @@ export class AllPacksPage extends Component {
   onDoubleClickPack = (selectedPack) => {
     const { dispatch } = this.props;
 
-    dispatch(push(`/packs/${selectedPack.id}`));
+    dispatch(push(`/fleet/packs/${selectedPack.id}`));
 
     return false;
   }

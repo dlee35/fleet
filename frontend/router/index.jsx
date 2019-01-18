@@ -33,7 +33,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 const routes = (
   <Provider store={store}>
     <Router history={history}>
-      <Route path="/" component={App}>
+      <Route path="/fleet/" component={App}>
         <Route path="setup" component={RegistrationPage} />
         <Route path="login" component={LoginRoutes}>
           <Route path="invites/:invite_token" component={ConfirmInvitePage} />
@@ -45,7 +45,7 @@ const routes = (
           <Route path="email/change/:token" component={EmailTokenRedirect} />
           <Route path="logout" component={LogoutPage} />
           <Route component={CoreLayout}>
-            <IndexRedirect to="/hosts/manage" />
+            <IndexRedirect to="/fleet/hosts/manage" />
             <Route path="admin" component={AuthenticatedAdminRoutes}>
               <Route path="users" component={AdminUserManagementPage} />
               <Route path="settings" component={AdminAppSettingsPage} />

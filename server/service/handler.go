@@ -543,7 +543,7 @@ func RedirectLoginToSetup(svc kolide.Service, logger kitlog.Logger, next http.Ha
 				return
 			}
 			newURL := r.URL
-			newURL.Path = "/setup"
+			newURL.Path = "/fleet/setup"
 			http.Redirect(w, r, newURL.String(), http.StatusTemporaryRedirect)
 		})
 
@@ -580,10 +580,16 @@ func RedirectSetupToLogin(svc kolide.Service, logger kitlog.Logger, next http.Ha
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/setup" {
 			newURL := r.URL
-			newURL.Path = "/login"
+			newURL.Path = "/fleet/login"
 			http.Redirect(w, r, newURL.String(), http.StatusTemporaryRedirect)
 			return
 		}
+//                if r.URL.Path == "/" {
+//                        newURL := r.URL
+//                        newURL.Path = "/fleet/login"
+//                        http.Redirect(w, r, newURL.String(), http.StatusTemporaryRedirect)
+//                        return
+//                }
 		next.ServeHTTP(w, r)
 	}
 }

@@ -42,7 +42,7 @@ const PackDetailsSidePanel = ({ onUpdateSelectedPack, pack, scheduledQueries = [
         onChange={updatePackStatus}
         value={!disabled}
       />
-      <Link className={`${baseClass}__edit-pack-link button button--inverse`} to={`/packs/${pack.id}`}>
+      <Link className={`${baseClass}__edit-pack-link button button--inverse`} to={`/fleet/packs/${pack.id}`}>
         Edit Pack
       </Link>
       <Description pack={pack} />

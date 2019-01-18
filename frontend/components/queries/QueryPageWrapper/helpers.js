@@ -9,7 +9,7 @@ export const fetchQuery = (dispatch, queryID) => {
     .catch((errors) => {
       const errorMessage = join(values(omit(errors, 'http_status')), ', ');
 
-      dispatch(push('/queries/new'));
+      dispatch(push('/fleet/queries/new'));
       dispatch(renderFlash('error', errorMessage));
 
       return false;

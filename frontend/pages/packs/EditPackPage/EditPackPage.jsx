@@ -110,7 +110,7 @@ export class EditPackPage extends Component {
       return false;
     }
 
-    return dispatch(push(`/packs/${packID}`));
+    return dispatch(push(`/fleet/packs/${packID}`));
   }
 
   onFetchTargets = (query, targetsResponse) => {
@@ -145,17 +145,17 @@ export class EditPackPage extends Component {
   onDblClickScheduledQuery = (scheduledQueryId) => {
     const { dispatch } = this.props;
 
-    return dispatch(push(`/queries/${scheduledQueryId}`));
+    return dispatch(push(`/fleet/queries/${scheduledQueryId}`));
   }
 
   onToggleEdit = () => {
     const { dispatch, isEdit, packID } = this.props;
 
     if (isEdit) {
-      return dispatch(push(`/packs/${packID}`));
+      return dispatch(push(`/fleet/packs/${packID}`));
     }
 
-    return dispatch(push(`/packs/${packID}/edit`));
+    return dispatch(push(`/fleet/packs/${packID}/edit`));
   }
 
   onUpdateScheduledQuery = (formData) => {
