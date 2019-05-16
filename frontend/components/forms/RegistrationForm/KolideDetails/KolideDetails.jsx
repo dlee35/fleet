@@ -29,7 +29,7 @@ class KolideDetails extends Component {
         <div className="registration-fields">
           <InputFieldWithIcon
             {...fields.kolide_server_url}
-            placeholder="Kolide Web Address (API is on port 8080)"
+            placeholder="Fleet Web Address (API is on port 8080)"
             tabIndex={tabIndex}
             hint={['Don’t include ', <code key="hint">/v1</code>, ' or any other path']}
           />

@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -42,7 +43,7 @@ const (
 	TLSProfileOld          = "old"
 )
 
-// ServerConfig defines configs related to the Kolide server
+// ServerConfig defines configs related to the Fleet server
 type ServerConfig struct {
 	Address    string
 	Cert       string
@@ -73,10 +74,12 @@ type SessionConfig struct {
 // OsqueryConfig defines configs related to osquery
 type OsqueryConfig struct {
 	NodeKeySize         int           `yaml:"node_key_size"`
+	StatusLogPlugin     string        `yaml:"status_log_plugin"`
+	ResultLogPlugin     string        `yaml:"result_log_plugin"`
+	LabelUpdateInterval time.Duration `yaml:"label_update_interval"`
 	StatusLogFile       string        `yaml:"status_log_file"`
 	ResultLogFile       string        `yaml:"result_log_file"`
 	EnableLogRotation   bool          `yaml:"enable_log_rotation"`
-	LabelUpdateInterval time.Duration `yaml:"label_update_interval"`
 }
 
 // LoggingConfig defines configs related to logging
@@ -86,19 +89,37 @@ type LoggingConfig struct {
 	DisableBanner bool `yaml:"disable_banner"`
 }
 
+// FirehoseConfig defines configs for the AWS Firehose logging plugin
+type FirehoseConfig struct {
+	Region          string
+	AccessKeyID     string `yaml:"access_key_id"`
+	SecretAccessKey string `yaml:"secret_access_key"`
+	StatusStream    string `yaml:"status_stream"`
+	ResultStream    string `yaml:"result_stream"`
+}
+
+// FilesystemConfig defines configs for the Filesystem logging plugin
+type FilesystemConfig struct {
+	StatusLogFile     string `yaml:"status_log_file"`
+	ResultLogFile     string `yaml:"result_log_file"`
+	EnableLogRotation bool   `yaml:"enable_log_rotation"`
+}
+
 // KolideConfig stores the application configuration. Each subcategory is
 // broken up into it's own struct, defined above. When editing any of these
 // structs, Manager.addConfigs and Manager.LoadConfig should be
 // updated to set and retrieve the configurations as appropriate.
 type KolideConfig struct {
-	Mysql   MysqlConfig
-	Redis   RedisConfig
-	Server  ServerConfig
-	Auth    AuthConfig
-	App     AppConfig
-	Session SessionConfig
-	Osquery OsqueryConfig
-	Logging LoggingConfig
+	Mysql      MysqlConfig
+	Redis      RedisConfig
+	Server     ServerConfig
+	Auth       AuthConfig
+	App        AppConfig
+	Session    SessionConfig
+	Osquery    OsqueryConfig
+	Logging    LoggingConfig
+	Firehose   FirehoseConfig
+	Filesystem FilesystemConfig
 }
 
 // addConfigs adds the configuration keys and default values that will be
@@ -134,11 +155,11 @@ func (man Manager) addConfigs() {
 
 	// Server
 	man.addConfigString("server.address", "0.0.0.0:8080",
-		"Kolide server address (host:port)")
+		"Fleet server address (host:port)")
 	man.addConfigString("server.cert", "./tools/osquery/kolide.crt",
-		"Kolide TLS certificate path")
+		"Fleet TLS certificate path")
 	man.addConfigString("server.key", "./tools/osquery/kolide.key",
-		"Kolide TLS key path")
+		"Fleet TLS key path")
 	man.addConfigBool("server.tls", true,
 		"Enable TLS (required for osqueryd communication)")
 	man.addConfigString(TLSProfileKey, TLSProfileModern,
@@ -170,14 +191,18 @@ func (man Manager) addConfigs() {
 	// Osquery
 	man.addConfigInt("osquery.node_key_size", 24,
 		"Size of generated osqueryd node keys")
-	man.addConfigString("osquery.status_log_file", "/tmp/osquery_status",
-		"Path for osqueryd status logs")
-	man.addConfigString("osquery.result_log_file", "/tmp/osquery_result",
-		"Path for osqueryd result logs")
+	man.addConfigString("osquery.status_log_plugin", "filesystem",
+		"Log plugin to use for status logs")
+	man.addConfigString("osquery.result_log_plugin", "filesystem",
+		"Log plugin to use for result logs")
 	man.addConfigDuration("osquery.label_update_interval", 1*time.Hour,
 		"Interval to update host label membership (i.e. 1h)")
+	man.addConfigString("osquery.status_log_file", "",
+		"(DEPRECATED: Use filesystem.status_log_file) Path for osqueryd status logs")
+	man.addConfigString("osquery.result_log_file", "",
+		"(DEPRECATED: Use filesystem.result_log_file) Path for osqueryd result logs")
 	man.addConfigBool("osquery.enable_log_rotation", false,
-		"Osquery log files will be automatically rotated")
+		"(DEPRECATED: Use filesystem.enable_log_rotation) Enable automatic rotation for osquery log files")
 
 	// Logging
 	man.addConfigBool("logging.debug", false,
@@ -186,6 +211,23 @@ func (man Manager) addConfigs() {
 		"Log in JSON format")
 	man.addConfigBool("logging.disable_banner", false,
 		"Disable startup banner")
+
+	// Firehose
+	man.addConfigString("firehose.region", "", "AWS Region to use")
+	man.addConfigString("firehose.access_key_id", "", "Access Key ID for AWS authentication")
+	man.addConfigString("firehose.secret_access_key", "", "Secret Access Key for AWS authentication")
+	man.addConfigString("firehose.status_stream", "",
+		"Firehose stream name for status logs")
+	man.addConfigString("firehose.result_stream", "",
+		"Firehose stream name for result logs")
+
+	// Filesystem
+	man.addConfigString("filesystem.status_log_file", "/tmp/osquery_status",
+		"Log file path to use for status logs")
+	man.addConfigString("filesystem.result_log_file", "/tmp/osquery_result",
+		"Log file path to use for result logs")
+	man.addConfigBool("filesystem.enable_log_rotation", false,
+		"Enable automatic rotation for osquery log files")
 }
 
 // LoadConfig will load the config variables into a fully initialized
@@ -233,6 +275,8 @@ func (man Manager) LoadConfig() KolideConfig {
 		},
 		Osquery: OsqueryConfig{
 			NodeKeySize:         man.getConfigInt("osquery.node_key_size"),
+			StatusLogPlugin:     man.getConfigString("osquery.status_log_plugin"),
+			ResultLogPlugin:     man.getConfigString("osquery.result_log_plugin"),
 			StatusLogFile:       man.getConfigString("osquery.status_log_file"),
 			ResultLogFile:       man.getConfigString("osquery.result_log_file"),
 			LabelUpdateInterval: man.getConfigDuration("osquery.label_update_interval"),
@@ -242,6 +286,18 @@ func (man Manager) LoadConfig() KolideConfig {
 			Debug:         man.getConfigBool("logging.debug"),
 			JSON:          man.getConfigBool("logging.json"),
 			DisableBanner: man.getConfigBool("logging.disable_banner"),
+		},
+		Firehose: FirehoseConfig{
+			Region:          man.getConfigString("firehose.region"),
+			AccessKeyID:     man.getConfigString("firehose.access_key_id"),
+			SecretAccessKey: man.getConfigString("firehose.secret_access_key"),
+			StatusStream:    man.getConfigString("firehose.status_stream"),
+			ResultStream:    man.getConfigString("firehose.result_stream"),
+		},
+		Filesystem: FilesystemConfig{
+			StatusLogFile:     man.getConfigString("filesystem.status_log_file"),
+			ResultLogFile:     man.getConfigString("filesystem.result_log_file"),
+			EnableLogRotation: man.getConfigBool("filesystem.enable_log_rotation"),
 		},
 	}
 }
@@ -263,7 +319,7 @@ func flagNameFromConfigKey(key string) string {
 	return strings.Replace(key, ".", "_", -1)
 }
 
-// Manager manages the addition and retrieval of config values for Kolide
+// Manager manages the addition and retrieval of config values for Fleet
 // configs. It's only public API method is LoadConfig, which will return the
 // populated KolideConfig struct.
 type Manager struct {
@@ -431,11 +487,12 @@ func (man Manager) loadConfigFile() {
 	man.viper.SetConfigFile(configFile)
 	err := man.viper.ReadInConfig()
 
-	fmt.Println("Using config file: ", man.viper.ConfigFileUsed())
-
 	if err != nil {
-		panic("Error reading config: " + err.Error())
+		fmt.Println("Error loading config file:", err)
+		os.Exit(1)
 	}
+
+	fmt.Println("Using config file: ", man.viper.ConfigFileUsed())
 }
 
 // TestConfig returns a barebones configuration suitable for use in tests.
@@ -457,13 +514,17 @@ func TestConfig() KolideConfig {
 		},
 		Osquery: OsqueryConfig{
 			NodeKeySize:         24,
-			StatusLogFile:       "/dev/null",
-			ResultLogFile:       "/dev/null",
+			StatusLogPlugin:     "filesystem",
+			ResultLogPlugin:     "filesystem",
 			LabelUpdateInterval: 1 * time.Hour,
 		},
 		Logging: LoggingConfig{
 			Debug:         true,
 			DisableBanner: true,
+		},
+		Filesystem: FilesystemConfig{
+			StatusLogFile: "/dev/null",
+			ResultLogFile: "/dev/null",
 		},
 	}
 }

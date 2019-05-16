@@ -172,18 +172,18 @@ class AppConfigForm extends Component {
           </div>
         </div>
         <div className={`${baseClass}__section`}>
-          <h2>Kolide Web Address</h2>
+          <h2>Fleet Web Address</h2>
           <div className={`${baseClass}__inputs`}>
             <InputField
               {...fields.kolide_server_url}
-              label="Kolide App URL"
+              label="Fleet App URL"
               hint={<span>Include base path only (eg. no <code>/v1</code>)</span>}
             />
           </div>
           <div className={`${baseClass}__details`}>
-            <p>What base URL should <strong>osqueryd</strong> clients use to connect and register with <strong>Kolide</strong>?</p>
+            <p>What base URL should <strong>osqueryd</strong> clients use to connect and register with <strong>Fleet</strong>?</p>
             <p className={`${baseClass}__note`}><strong>Note: Remember the endpoints access the API on TCP port 8080.</strong></p>
-            <p className={`${baseClass}__note`}><strong>Note:</strong> Please ensure the URL you choose is accessible to all endpoints that need to communicate with Kolide, otherwise they will not be able to correctly register.</p>
+            <p className={`${baseClass}__note`}><strong>Note:</strong> Please ensure the URL you choose is accessible to all endpoints that need to communicate with Fleet, otherwise they will not be able to correctly register.</p>
           </div>
         </div>
 
@@ -216,7 +216,7 @@ class AppConfigForm extends Component {
             />
           </div>
           <div className={`${baseClass}__details`}>
-            <p>The required entity ID is a URI that you use to identify <strong>Kolide</strong> when configuring the identity provider.</p>
+            <p>The required entity ID is a URI that you use to identify <strong>Fleet</strong> when configuring the identity provider.</p>
           </div>
 
           <div className={`${baseClass}__inputs`}>
@@ -280,7 +280,7 @@ class AppConfigForm extends Component {
             />
           </div>
           <div className={`${baseClass}__details`}>
-            <p>The address email recipients will see all messages that are sent from the <strong>Kolide</strong> application.</p>
+            <p>The address email recipients will see all messages that are sent from the <strong>Fleet</strong> application.</p>
           </div>
           <div className={`${baseClass}__inputs ${baseClass}__inputs--smtp`}>
             <InputField
@@ -319,7 +319,7 @@ class AppConfigForm extends Component {
           <h2>Osquery Enrollment Secret</h2>
           <div className={`${baseClass}__inputs`}>
             <p className={`${baseClass}__enroll-secret-label`}>
-              This is the secret that you use to enroll osquery agents with Kolide:
+              This is the secret that you use to enroll osquery agents with Fleet:
               <Button variant="unstyled" onClick={onToggleRevealSecret}>Reveal Secret</Button>
             </p>
             <InputField
